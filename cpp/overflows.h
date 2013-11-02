@@ -47,7 +47,7 @@ extern inline bool addition_overflows(T a, T b)
 {
 	typedef ::std::numeric_limits<T> tl;
 	static_assert(tl::is_integer, "T must be integral type");
-	const bool u = !tl::is_signed;
+	constexpr bool u = !tl::is_signed;
 
 	if (b >= 0 || u)
 		return a > (tl::max() - b);
@@ -66,7 +66,7 @@ extern inline bool subtraction_overflows(T a, T b)
 {
 	typedef ::std::numeric_limits<T> tl;
 	static_assert(tl::is_integer, "T must be integral type");
-	const bool u = !tl::is_signed;
+	constexpr bool u = !tl::is_signed;
 
 	if (b >= 0 || u)
 		return a < (tl::min() + b);
@@ -83,7 +83,7 @@ extern inline bool multiplication_overflows(T a, T b)
 {
 	typedef ::std::numeric_limits<T> tl;
 	static_assert(tl::is_integer, "T must be integral type");
-	const bool u = !tl::is_signed;
+	constexpr bool u = !tl::is_signed;
 
 	if (a >= 0 || u) {
 		if (b >= 0 || u)
@@ -110,7 +110,7 @@ extern inline bool division_overflows(T a, T b)
 {
 	typedef ::std::numeric_limits<T> tl;
 	static_assert(tl::is_integer, "T must be integral type");
-	const bool u = !tl::is_signed;
+	constexpr bool u = !tl::is_signed;
 
 	if (b == 0)
 		return true;
@@ -136,7 +136,7 @@ extern inline bool modulo_overflows(T a, T b)
 {
 	typedef ::std::numeric_limits<T> tl;
 	static_assert(tl::is_integer, "T must be integral type");
-	const bool u = !tl::is_signed;
+	constexpr bool u = !tl::is_signed;
 
 	/* completely identical to checking division */
 	if (b == 0)
