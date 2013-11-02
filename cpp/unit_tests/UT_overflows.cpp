@@ -34,7 +34,7 @@ public:
 	}
 };
 
-typedef ::testing::Types<signed char, unsigned char> TestTypes;
+typedef ::testing::Types<signed char, unsigned char, signed short, unsigned short> TestTypes;
 TYPED_TEST_CASE(UT_overflows, TestTypes);
 
 TYPED_TEST(UT_overflows, Addition)

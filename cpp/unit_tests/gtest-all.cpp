@@ -1,1 +1,1 @@
-../googletest_170/gtest-all.cpp
+../../thirdparty/googletest_170/gtest-all.cpp
