@@ -77,6 +77,8 @@ extern inline bool subtraction_overflows(T a, T b)
 /*
  * Multiplication is a bit trickier since the signs of a and b
  * together determine whether the op may overflow or underflow.
+ * We also have to make sure we do not divide T_MIN by -1 since
+ * that causes divison overflow.
  */
 template <typename T>
 extern inline bool multiplication_overflows(T a, T b)
@@ -85,14 +87,17 @@ extern inline bool multiplication_overflows(T a, T b)
 	static_assert(tl::is_integer, "T must be integral type");
 	constexpr bool u = !tl::is_signed;
 
-	if (a >= 0 || u) {
-		if (b >= 0 || u)
-			return (b > 0) && a > (tl::max() / b);
-		return a > (tl::min() / b);
+	if (u)
+		return (b != 0) && a > (tl::max() / b);
+
+	if (a > 0) {
+		if (b > 0)
+			return b > (tl::max() / a);
+		return b < (tl::min() / a);
 	} else {
-		if (b >= 0)
-			return (b > 0) && a < (tl::min() / b);
-		return a < (tl::max() / b);
+		if (b > 0)
+			return a < (tl::min() / b);
+		return (b != 0) && a < (tl::max() / b);
 	}
 }
 
