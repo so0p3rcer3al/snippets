@@ -1,8 +1,42 @@
-cflags   = -std=c11
-cxxflags = -std=c++11
+###
+# Template base: Nov 4 2013
+#
+
+###
+# Output executable, file extension (.c/.cpp/.cc),
+# source directory (./src), intermediate directory (.o, .d).
+f_exe     = prog
+c         = cpp
+d_src     = .
+d_ntm     = tmp
+
+###
+# Include directories (-I), library directories (-L),
+# library names (-l), specific standalones (../libhello.a).
+d_I       = . /usr/include/x86_64-linux-gnu/c++/4.8
+d_L       =
+d_l       = pthread
+f_lx      =
+
+###
+# Compilation settings.
+# F can be -- 0:dbg, 1:fast, 2:fast+dbg
+# For readability, c/cxx/cppflags show up before dbg ones
+# in the compilation command.
+cc        = gcc
+cxx       = g++
+cppflags  = #-pthread -Wl,--no-as-needed
+cflags    = -std=c11
+cxxflags  = -std=c++11
+
+ifneq ($F,0)
+cppflags += -O2
+else
+cppflags += -O0
+endif
+
 ifneq ($F,1)
-dbgcpp   =      -ggdb3 -O0                                                    \
-                -pedantic -Wall -Wextra                                       \
+dbgcpp   +=     -ggdb3 -pedantic -Wall -Wextra                                \
                 -Wno-switch-default -Wno-sign-compare                         \
                 -Wdouble-promotion -Wformat=2 -Wmissing-include-dirs          \
                 -Wsync-nand -Wunused -Wuninitialized -Wunknown-pragmas        \
@@ -15,60 +49,56 @@ dbgcpp   =      -ggdb3 -O0                                                    \
                 -Wvector-operation-performance -Wvla                          \
                 -Wdisabled-optimization -Wstack-protector                     \
                 -Woverlength-strings
-dbgc     =      -Wtraditional-conversion -Wdeclaration-after-statement        \
+dbgc     +=     -Wtraditional-conversion -Wdeclaration-after-statement        \
                 -Wbad-function-cast -Wjump-misses-init                        \
                 -Wstrict-prototypes -Wold-style-definition                    \
                 -Wmissing-prototypes -Wnested-externs                         \
                 -Wunsuffixed-float-constants
-	# for reference: gcc >= 4.8 only
-                # -Wzero-as-null-pointer-constant                             \
-                # -Wconditionally-supported -Wdelete-incomplete               \
-                # -Wuseless-cast -Wvarargs
-else
-dbgcpp   =      -O2
+        # gcc >= 4.8 only
+dbgcxx   +=     -Wzero-as-null-pointer-constant                               \
+                -Wuseless-cast -Wvarargs
 endif
 
-exe   = prog
-d_src = .
-d_icl = .
-d_ntm = tmp
-c     = cpp
-# additional: F, runargs
 
-srcs := $(wildcard $(d_src)/*.$c)
-objs := $(srcs:$(d_src)/%.$c=$(d_ntm)/%.o)
-CC        = gcc
-CXX       = g++
-CFLAGS   += $(strip $(cflags) $(dbgcpp) $(dbgc))
-CXXFLAGS += $(strip $(cxxflags) $(dbgcpp))
-CPPFLAGS += $(addprefix -I,$(d_icl))
-LDLIBS   += -lpthread
 
-.PHONY: all check-config
-all: check-config $(exe)
-$(exe): $(objs)
+###
+# Internals: preprocessing followed by rules
+srcs     := $(wildcard $(d_src)/*.$c)
+objs     := $(srcs:$(d_src)/%.$c=$(d_ntm)/%.o)
+CC       := $(cc)
+CXX      := $(cxx)
+CFLAGS   := $(strip   $(cflags) $(cppflags) $(dbgcpp) $(dbgc))
+CXXFLAGS := $(strip $(cxxflags) $(cppflags) $(dbgcpp) $(dbgcxx))
+CPPFLAGS := $(addprefix -I,$(d_I))
+LDFLAGS  := $(addprefix -L,$(d_L))
+LDLIBS   := $(addprefix -l,$(d_l)) $(strip $(f_lx))
+
+.PHONY: all
+all: $(f_exe)
+$(f_exe): $(objs)
 	$(LINK.$c) $^ $(LOADLIBES) $(LDLIBS) -o $@
 $(d_ntm)/%.o: $(d_src)/%.$c
 	$(COMPILE.$c) -MD -MP $(OUTPUT_OPTION) $<
 
 .PHONY: clean
 clean:
-	-rm -fv $(exe) $(d_ntm)/prevcfg $(d_ntm)/*.d $(d_ntm)/*.o
+	-rm -fv $(f_exe) $(d_ntm)/prevcfg $(d_ntm)/*.d $(d_ntm)/*.o
 	-rmdir --ignore-fail-on-non-empty -p $(d_ntm)
 
 .PHONY: run
 run: all
-	`readlink -e $(exe)` $(runargs)
+	`readlink -e $(f_exe)` $(runargs)
 
-newcfg   := $(strip $(foreach v,srcs LINK.$c COMPILE.$c,$v:$($v)))
+newcfg   := $(strip $(foreach v,srcs LINK.$c COMPILE.$c LDLIBS,$v:$($v)))
 -include $(d_ntm)/prevcfg
 ifneq ($(newcfg),$(prevcfg))
-check-config:
+.PHONY: force-rebuild
+force-rebuild:
 	@mkdir -p $(d_ntm)
-	@rm -fv $(exe) $(d_ntm)/*.d $(d_ntm)/*.o
 	@echo prevcfg=$(newcfg) > $(d_ntm)/prevcfg
-$(objs): check-config
+$(objs): force-rebuild
 else
 -include $(objs:.o=.d)
 endif
+
 
