@@ -3,9 +3,10 @@
 #include <limits.h>
 #include "overflows.h"
 
+using namespace ovf;
 
 template <typename T>
-class UT_overflows : public ::testing::Test {
+class UT_overflow_detect : public ::testing::Test {
 public:
 	typedef ::std::numeric_limits<T> nl;
 	typedef bool (*ovfunc)(T a, T b);
@@ -35,9 +36,9 @@ public:
 };
 
 typedef ::testing::Types<signed char, unsigned char> TestTypes;
-TYPED_TEST_CASE(UT_overflows, TestTypes);
+TYPED_TEST_CASE(UT_overflow_detect, TestTypes);
 
-TYPED_TEST(UT_overflows, Addition)
+TYPED_TEST(UT_overflow_detect, Addition)
 {
 	this->CheckAll([](TypeParam a, TypeParam b) {
 		typedef ::std::numeric_limits<TypeParam> nl;
@@ -46,7 +47,7 @@ TYPED_TEST(UT_overflows, Addition)
 	}, addition_overflows<TypeParam>);
 }
 
-TYPED_TEST(UT_overflows, Subtraction)
+TYPED_TEST(UT_overflow_detect, Subtraction)
 {
 	this->CheckAll([](TypeParam a, TypeParam b) {
 		typedef ::std::numeric_limits<TypeParam> nl;
@@ -55,7 +56,7 @@ TYPED_TEST(UT_overflows, Subtraction)
 	}, subtraction_overflows<TypeParam>);
 }
 
-TYPED_TEST(UT_overflows, Multiplication)
+TYPED_TEST(UT_overflow_detect, Multiplication)
 {
 	this->CheckAll([](TypeParam a, TypeParam b) {
 		typedef ::std::numeric_limits<TypeParam> nl;
@@ -64,7 +65,7 @@ TYPED_TEST(UT_overflows, Multiplication)
 	}, multiplication_overflows<TypeParam>);
 }
 
-TYPED_TEST(UT_overflows, Division)
+TYPED_TEST(UT_overflow_detect, Division)
 {
 	this->CheckAll([](TypeParam a, TypeParam b) {
 		typedef ::std::numeric_limits<TypeParam> nl;
@@ -74,7 +75,7 @@ TYPED_TEST(UT_overflows, Division)
 	}, division_overflows<TypeParam>);
 }
 
-TYPED_TEST(UT_overflows, Modulo)
+TYPED_TEST(UT_overflow_detect, Modulo)
 {
 	this->CheckAll([](TypeParam a, TypeParam b) {
 		typedef ::std::numeric_limits<TypeParam> nl;

@@ -9,6 +9,7 @@ def disabled(f):
 		pass
 	return _f
 
+
 @decorator
 def counted(f):
 	"""Counts the number of times f is called."""

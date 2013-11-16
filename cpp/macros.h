@@ -4,8 +4,6 @@
 #ifndef MACROS_H
 #define MACROS_H
 
-#include <stdbool.h>
-#include <limits.h>
 
 
 #define NOOP ((void)0)
@@ -18,7 +16,6 @@
  */
 #define  STR(l) #l
 #define XSTR(m) STR(m)
-
 
 
 

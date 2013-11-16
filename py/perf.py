@@ -20,6 +20,7 @@ def memo(f):
 	_f.cache = C
 	return _f
 
+
 #@decorator   # can't change attributes of builtin methods.
 def fastmemo(f):
 	"""Memoization decorator for a function taking a single argument.

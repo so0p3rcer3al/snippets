@@ -9,6 +9,7 @@ def decorator(d):
 	update_wrapper(_d, d)
 	return _d
 
+
 @decorator
 def n_ary(f):
 	"""Given binary function f(x, y), return an n_ary function f' such
@@ -19,7 +20,6 @@ def n_ary(f):
 			return f(x, _f(y, *rem))
 		return f(x, y)
 	return _f
-
 
 
 import itertools
