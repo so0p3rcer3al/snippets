@@ -20,16 +20,16 @@ namespace ovf {
 /*
  * Returns true if op will overflow, false otherwise.
  */
-template <typename T> bool addition_overflows(T a, T b);
-template <typename T> bool subtraction_overflows(T a, T b);
-template <typename T> bool multiplication_overflows(T a, T b);
-template <typename T> bool division_overflows(T a, T b);
-template <typename T> bool modulo_overflows(T a, T b);
+template <typename T> bool addition_overflows       (T a, T b);
+template <typename T> bool subtraction_overflows    (T a, T b);
+template <typename T> bool multiplication_overflows (T a, T b);
+template <typename T> bool division_overflows       (T a, T b);
+template <typename T> bool modulo_overflows         (T a, T b);
 
 
 /*
  * Converts signed -> unsigned without overflow.
- * If the value is negative, adds T_MIN+1 to bump it into range
+ * If the value is negative, T_MIN+1 is added to bump it into range
  * (this is well-defined behavior).
  */
 template <typename sT, typename uT = typename ::std::make_unsigned<sT>::type>
@@ -44,15 +44,17 @@ sT to_signed(uT n);
 
 /*
  * Has fields <is_available>, <fast_t>, and <least_t>.
- * The types are only valid when <is_available> is true.
+ * The types are valid only when <is_available> is true.
  */
-template <typename T> class larger_type;
+template <typename T>
+class larger_type;
 
 
 /*
- * Equivalent to (a+b)/2, but is guaranteed to not overflow.
+ * Equivalent to (a+b)/2, but will not cause an intermediate overflow.
  */
-template <typename T> T average(T a, T b);
+template <typename T>
+T average(T a, T b);
 
 
 
@@ -72,10 +74,9 @@ template <typename T> T average(T a, T b);
  *
  * Another (more popular) method is to perform the operation
  * using a larger datatype and check the result afterwards. If
- * the initial type is already very large, the result can be
- * approximated using floating points, because in a situation
- * like that, you should probably reconsider your approach
- * anyway.
+ * the initial type is already very large, then a custom,
+ * environment/architecture/problem-specific solution is probably
+ * appropriate.
  *
  * Note that unsigned types technically do not overflow. They
  * are defined by c/c++ standards to wrap around from
@@ -208,7 +209,7 @@ extern inline uT to_unsigned(sT n)
 {
 	typedef ::std::numeric_limits<sT> sl;
 	static_assert(sl::is_signed, "sT must be signed");
-	/* TODO: check validity if non-default uT
+	/* TODO: check validity if non-default uT.
 	 * (default uT already creates error if sT does not have an
 	 * unsigned equivalent -- i.e., is not an int.) */
 	return uT(n);
@@ -244,13 +245,19 @@ extern inline sT to_signed(uT n)
  * Provides a convenient way of obtaining a larger type when using
  * templates, which can be used to store intermediate calculations
  * and avoid overflow.
+ *
+ * This does not create a compile error if no larger types are
+ * available. This allows the programmer to implement a fallback
+ * solution. But note that even in this case, the types will be
+ * void and thus unusable.
  */
 template <typename T>
 class larger_type {
 private:
 	/* helpers to improve readability. also offers convenient way
 	 * to tweak behavior. */
-	typedef ::std::numeric_limits<T> cl;
+	typedef ::std::numeric_limits<T> tl;
+	static_assert(tl::is_integer, "T must be integral type");
 	static constexpr size_t current = sizeof(T);
 	static constexpr size_t desired = current * 2;
 
@@ -259,51 +266,47 @@ private:
 		static constexpr bool value = sizeof(A) >= desired;
 	};
 
-	/* considers each value in order and selects the first one
-	 * that meets our criteria. */
+	/* considers each type in order and selects the first one
+	 * that meets our criteria */
 	template <typename A, typename... BCD>
 	struct consider_in_order {
 		/* take current type or recursively move on to next */
-		typedef typename ::std::conditional<
-			is_ok<A>::value, A,
-			typename consider_in_order<BCD...>::type
+		typedef typename ::std::conditional<is_ok<A>::value,
+			A, typename consider_in_order<BCD...>::type
 			>::type type;
 	};
-	/* special case: none of the options work. default to type T. */
+	/* special case: only one remaining option */
 	template <typename A>
 	struct consider_in_order<A> {
-		typedef typename ::std::conditional<
-			is_ok<A>::value, A, T>::type type;
+		typedef typename ::std::conditional<is_ok<A>::value,
+			A, void
+			>::type type;
 	};
 public:
 	/* only meaningful if <is_available> is true. */
-	typedef typename ::std::conditional<cl::is_signed,
+	typedef typename ::std::conditional<tl::is_signed,
 		typename consider_in_order<
 			int_fast8_t, int_fast16_t,
-			int_fast32_t, int_fast64_t
-			>::type,
+			int_fast32_t, int_fast64_t>::type,
 		typename consider_in_order<
 			uint_fast8_t, uint_fast16_t,
-			uint_fast32_t, uint_fast64_t
-			>::type
+			uint_fast32_t, uint_fast64_t>::type
 		>::type fast_t;
 
 	/* only meaningful if <is_available> is true. */
-	typedef typename ::std::conditional<cl::is_signed,
+	typedef typename ::std::conditional<tl::is_signed,
 		typename consider_in_order<
 			int_least8_t, int_least16_t,
-			int_least32_t, int_least64_t
-			>::type,
+			int_least32_t, int_least64_t>::type,
 		typename consider_in_order<
 			uint_least8_t, uint_least16_t,
-			uint_least32_t, uint_least64_t
-			>::type
+			uint_least32_t, uint_least64_t>::type
 		>::type least_t;
 
 	/* true only if <least_t> and <fast_t> are valid and usable. */
-	static constexpr bool is_available = cl::is_integer &&
-						is_ok<fast_t>::value &&
-						is_ok<least_t>::value;
+	static constexpr bool is_available = tl::is_integer &&
+				!::std::is_same<fast_t, void>::value &&
+				!::std::is_same<least_t, void>::value;
 };
 
 

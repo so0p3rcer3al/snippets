@@ -10,9 +10,10 @@ using ::std::is_same;
 
 TEST(UT_overflow_largertype, Invalid)
 {
-	ASSERT_FALSE(larger_type<float>::is_available);
-	ASSERT_FALSE(larger_type<double>::is_available);
-	ASSERT_FALSE(larger_type<::std::string>::is_available);
+	/* updated -- will now cause compile error */
+	// ASSERT_FALSE(larger_type<float>::is_available);
+	// ASSERT_FALSE(larger_type<double>::is_available);
+	// ASSERT_FALSE(larger_type<::std::string>::is_available);
 }
 
 #define fast_tcomp(FROM, TO) \
