@@ -2,9 +2,10 @@
 # GNU C++ (Ubuntu/Linaro 4.8.1-10ubuntu8) version 4.8.1 (x86_64-linux-gnu)
 #	compiled by GNU C version 4.8.1, GMP version 5.1.2, MPFR version 3.1.1-p2, MPC version 1.0.1
 # GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
-# options passed:  -imultiarch x86_64-linux-gnu -D_GNU_SOURCE hello.cpp
-# -mtune=generic -march=x86-64 -auxbase-strip out.s -O2 -std=c++11
-# -fverbose-asm -fstack-protector -Wformat -Wformat-security
+# options passed:  -I /usr/include/x86_64-linux-gnu/c++/4.8
+# -imultiarch x86_64-linux-gnu -D_GNU_SOURCE hello.cpp -mtune=generic
+# -march=x86-64 -auxbase-strip g++.s -O2 -std=c++11 -fverbose-asm
+# -fstack-protector -Wformat -Wformat-security
 # options enabled:  -faggressive-loop-optimizations
 # -fasynchronous-unwind-tables -fauto-inc-dec -fbranch-count-reg
 # -fcaller-saves -fcombine-stack-adjustments -fcommon -fcompare-elim
@@ -52,13 +53,13 @@
 _Z11regular_avgss:
 .LFB1444:
 	.cfi_startproc
-	movswl	%di, %eax	# a, D.32522
-	movswl	%si, %esi	# b, D.32522
-	addl	%esi, %eax	# D.32522, D.32522
-	movl	%eax, %edx	# D.32522, tmp74
+	movswl	%di, %eax	# a, D.32545
+	movswl	%si, %esi	# b, D.32545
+	addl	%esi, %eax	# D.32545, D.32545
+	movl	%eax, %edx	# D.32545, tmp74
 	shrl	$31, %edx	#, tmp74
-	addl	%edx, %eax	# tmp74, D.32522
-	sarl	%eax	# D.32522
+	addl	%edx, %eax	# tmp74, D.32545
+	sarl	%eax	# D.32545
 	ret
 	.cfi_endproc
 .LFE1444:
@@ -69,13 +70,40 @@ _Z11regular_avgss:
 _Z8safe_avgss:
 .LFB1445:
 	.cfi_startproc
-	movswq	%di, %rax	# a, D.32528
-	movswq	%si, %rsi	# b, D.32528
-	addq	%rsi, %rax	# D.32528, D.32528
-	movq	%rax, %rdx	# D.32528, tmp74
-	shrq	$63, %rdx	#, tmp74
-	addq	%rdx, %rax	# tmp74, D.32528
-	sarq	%rax	# D.32528
+	testw	%si, %si	# b
+	setg	%dl	#, D.32561
+	testw	%di, %di	# a
+	setle	%al	#, D.32561
+	cmpb	%al, %dl	# D.32561, D.32561
+	jne	.L6	#,
+	movswl	%di, %edi	# a, D.32564
+	movswl	%si, %esi	# b, D.32564
+	addl	%edi, %esi	# D.32564, D.32564
+	movl	%esi, %eax	# D.32564, tmp112
+	shrl	$31, %eax	#, tmp112
+	addl	%esi, %eax	# D.32564, tmp113
+	shrl	%eax	# D.32563
+	ret
+	.p2align 4,,10
+	.p2align 3
+.L6:
+	movl	%esi, %edx	# b, tmp92
+	movl	%edi, %eax	# a, tmp96
+	shrw	$15, %dx	#, tmp92
+	shrw	$15, %ax	#, tmp96
+	addl	%esi, %edx	# b, y
+	addl	%edi, %eax	# a, x
+	addl	%esi, %edi	# b, D.32562
+	sarw	%dx	# y
+	sarw	%ax	# x
+	addl	%edx, %eax	# y, D.32562
+	leal	(%rax,%rax), %edx	#, tmp101
+	subl	%edx, %edi	# tmp101, D.32562
+	movl	%edi, %esi	# D.32562, tmp105
+	shrw	$15, %si	#, tmp105
+	addl	%esi, %edi	# tmp105, D.32563
+	sarw	%di	# D.32563
+	addl	%edi, %eax	# D.32563, D.32563
 	ret
 	.cfi_endproc
 .LFE1445:
@@ -86,11 +114,11 @@ _Z8safe_avgss:
 _Z8add_ovf1ss:
 .LFB1446:
 	.cfi_startproc
-	movswq	%di, %rdi	# a, D.32534
-	movswq	%si, %rsi	# b, D.32534
-	leaq	32768(%rdi,%rsi), %rax	#, D.32535
-	cmpq	$65535, %rax	#, D.32535
-	setbe	%al	#, D.32536
+	movswq	%di, %rdi	# a, D.32569
+	movswq	%si, %rsi	# b, D.32569
+	leaq	32768(%rdi,%rsi), %rax	#, D.32570
+	cmpq	$65535, %rax	#, D.32570
+	setbe	%al	#, D.32571
 	ret
 	.cfi_endproc
 .LFE1446:
@@ -102,21 +130,21 @@ _Z8add_ovf2ss:
 .LFB1447:
 	.cfi_startproc
 	testw	%si, %si	# b
-	movswl	%di, %edi	# a, D.32541
-	movswl	%si, %esi	# b, D.32541
-	js	.L5	#,
-	movl	$32767, %eax	#, D.32541
-	subl	%esi, %eax	# D.32541, D.32541
-	cmpl	%eax, %edi	# D.32541, D.32541
-	setg	%al	#, D.32542
+	movswl	%di, %edi	# a, D.32576
+	movswl	%si, %esi	# b, D.32576
+	js	.L9	#,
+	movl	$32767, %eax	#, D.32576
+	subl	%esi, %eax	# D.32576, D.32576
+	cmpl	%eax, %edi	# D.32576, D.32576
+	setg	%al	#, D.32577
 	ret
 	.p2align 4,,10
 	.p2align 3
-.L5:
-	movl	$-32768, %eax	#, D.32541
-	subl	%esi, %eax	# D.32541, D.32541
-	cmpl	%eax, %edi	# D.32541, D.32541
-	setl	%al	#, D.32542
+.L9:
+	movl	$-32768, %eax	#, D.32576
+	subl	%esi, %eax	# D.32576, D.32576
+	cmpl	%eax, %edi	# D.32576, D.32576
+	setl	%al	#, D.32577
 	ret
 	.cfi_endproc
 .LFE1447:
@@ -127,12 +155,12 @@ _Z8add_ovf2ss:
 _Z9mult_ovf1ss:
 .LFB1448:
 	.cfi_startproc
-	movswq	%si, %rsi	# b, D.32547
+	movswq	%si, %rsi	# b, D.32582
 	movswq	%di, %rdi	# a, r
-	imulq	%rsi, %rdi	# D.32547, r
-	addq	$32768, %rdi	#, D.32548
-	cmpq	$65535, %rdi	#, D.32548
-	setbe	%al	#, D.32549
+	imulq	%rsi, %rdi	# D.32582, r
+	addq	$32768, %rdi	#, D.32583
+	cmpq	$65535, %rdi	#, D.32583
+	setbe	%al	#, D.32584
 	ret
 	.cfi_endproc
 .LFE1448:
@@ -144,52 +172,52 @@ _Z9mult_ovf2ss:
 .LFB1449:
 	.cfi_startproc
 	testw	%di, %di	# a
-	jle	.L10	#,
+	jle	.L13	#,
 	testw	%si, %si	# b
-	movswl	%di, %edi	# a, D.32559
-	movswl	%si, %esi	# b, D.32559
-	jle	.L11	#,
+	movswl	%di, %edi	# a, D.32594
+	movswl	%si, %esi	# b, D.32594
+	jle	.L14	#,
 	movl	$32767, %eax	#, tmp82
 	cltd
-	idivl	%edi	# D.32559
-	cmpl	%eax, %esi	# D.32559, D.32559
-	setg	%al	#, D.32560
-	ret
-	.p2align 4,,10
-	.p2align 3
-.L10:
-	cmpw	$0, %si	#, b
-	jle	.L13	#,
-	movl	$-32768, %eax	#, tmp96
-	movswl	%si, %esi	# b, D.32559
-	movswl	%di, %edi	# a, D.32559
-	cltd
-	idivl	%esi	# D.32559
-	cmpl	%eax, %edi	# D.32559, D.32559
-	setl	%al	#, D.32560
+	idivl	%edi	# D.32594
+	cmpl	%eax, %esi	# D.32594, D.32594
+	setg	%al	#, D.32595
 	ret
 	.p2align 4,,10
 	.p2align 3
 .L13:
-	movl	$0, %eax	#, D.32560
-	je	.L12	#,
-	movl	$32767, %eax	#, tmp103
-	movswl	%si, %esi	# b, D.32559
-	movswl	%di, %edi	# a, D.32559
+	cmpw	$0, %si	#, b
+	jle	.L16	#,
+	movl	$-32768, %eax	#, tmp96
+	movswl	%si, %esi	# b, D.32594
+	movswl	%di, %edi	# a, D.32594
 	cltd
-	idivl	%esi	# D.32559
-	cmpl	%eax, %edi	# D.32559, D.32559
-	setl	%al	#, D.32560
-.L12:
+	idivl	%esi	# D.32594
+	cmpl	%eax, %edi	# D.32594, D.32594
+	setl	%al	#, D.32595
+	ret
+	.p2align 4,,10
+	.p2align 3
+.L16:
+	movl	$0, %eax	#, D.32595
+	je	.L15	#,
+	movl	$32767, %eax	#, tmp103
+	movswl	%si, %esi	# b, D.32594
+	movswl	%di, %edi	# a, D.32594
+	cltd
+	idivl	%esi	# D.32594
+	cmpl	%eax, %edi	# D.32594, D.32594
+	setl	%al	#, D.32595
+.L15:
 	rep ret
 	.p2align 4,,10
 	.p2align 3
-.L11:
+.L14:
 	movl	$-32768, %eax	#, tmp89
 	cltd
-	idivl	%edi	# D.32559
-	cmpl	%eax, %esi	# D.32559, D.32559
-	setl	%al	#, D.32560
+	idivl	%edi	# D.32594
+	cmpl	%eax, %esi	# D.32594, D.32594
+	setl	%al	#, D.32595
 	ret
 	.cfi_endproc
 .LFE1449:

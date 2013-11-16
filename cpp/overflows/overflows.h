@@ -32,14 +32,14 @@ template <typename T> bool modulo_overflows         (T a, T b);
  * If the value is negative, T_MIN+1 is added to bump it into range
  * (this is well-defined behavior).
  */
-template <typename sT, typename uT = typename ::std::make_unsigned<sT>::type>
-uT to_unsigned(sT n);
+template <typename S, typename U = typename ::std::make_unsigned<S>::type>
+U to_unsigned(S n);
 /*
  * Converts unsigned -> signed without overflow
  * such that it "reverses" the transformation from signed -> unsigned.
  */
-template <typename uT, typename sT = typename ::std::make_signed<uT>::type>
-sT to_signed(uT n);
+template <typename U, typename S = typename ::std::make_signed<U>::type>
+S to_signed(U n);
 
 
 /*
@@ -204,15 +204,15 @@ extern inline bool modulo_overflows(T a, T b)
  * Negative values are incremented by UNSIGNED_MAX+1 to bump
  * them into range while positive ones are converted directly.
  */
-template <typename sT, typename uT>
-extern inline uT to_unsigned(sT n)
+template <typename S, typename U>
+extern inline U to_unsigned(S n)
 {
-	typedef ::std::numeric_limits<sT> sl;
-	static_assert(sl::is_signed, "sT must be signed");
-	/* TODO: check validity if non-default uT.
-	 * (default uT already creates error if sT does not have an
+	typedef ::std::numeric_limits<S> sl;
+	static_assert(sl::is_signed, "S must be signed");
+	/* TODO: check validity if non-default U.
+	 * (default U already creates error if S does not have an
 	 * unsigned equivalent -- i.e., is not an int.) */
-	return uT(n);
+	return U(n);
 }
 
 /*
@@ -221,20 +221,20 @@ extern inline uT to_unsigned(sT n)
  * equivalent of) SIGNED_MIN and then adding it back after
  * conversionn, if necessary.
  */
-template <typename uT, typename sT>
-extern inline sT to_signed(uT n)
+template <typename U, typename S>
+extern inline S to_signed(U n)
 {
-	typedef ::std::numeric_limits<uT> ul;
-	typedef ::std::numeric_limits<sT> sl;
-	static_assert(!ul::is_signed, "uT must be unsigned");
-	/* TODO: check validity if non-default sT */
-	static_assert(uT(sl::max()) + uT(1) == uT(sl::min()),
+	typedef ::std::numeric_limits<U> ul;
+	typedef ::std::numeric_limits<S> sl;
+	static_assert(!ul::is_signed, "U must be unsigned");
+	/* TODO: check validity if non-default S */
+	static_assert(U(sl::max()) + 1 == U(sl::min()),
 		"Signed type does not wrap. So this algorithm is inapplicable");
 
-	if (n <= uT(sl::max()))
-		return sT(n);
+	if (n <= U(sl::max()))
+		return S(n);
 	/* n > sl::max() -- i.e., n >= sl::min() */
-	return sT(sT(n - uT(sl::min())) + sl::min());
+	return S(S(n - U(sl::min())) + sl::min());
 }
 
 
@@ -247,7 +247,7 @@ extern inline sT to_signed(uT n)
  * and avoid overflow.
  *
  * This does not create a compile error if no larger types are
- * available. This allows the programmer to implement a fallback
+ * available, allowing the programmer to implement a fallback
  * solution. But note that even in this case, the types will be
  * void and thus unusable.
  */

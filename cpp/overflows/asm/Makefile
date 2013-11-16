@@ -1,11 +1,12 @@
 
-ifeq ($F,0)
-o = -O0
-else
-o = -O2
-endif
+cxx = g++
+o   = -O2
+# need for icpc
+misc = -I/usr/include/x86_64-linux-gnu/c++/4.8
 
 .PHONY: all
 all:
-	g++ -S -fverbose-asm $o -std=c++11 hello.cpp -o out.s
-	vim out.s
+	$(cxx) -S -fverbose-asm $(misc) $o -std=c++11 hello.cpp -o $(cxx).s
+	vim $(cxx).s
+
+
