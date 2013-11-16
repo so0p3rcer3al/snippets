@@ -43,11 +43,14 @@ S to_signed(U n);
 
 
 /*
+ * Provides a convenient way of obtaining a larger int type when using
+ * templates, which can be used to store intermediate calculations and
+ * avoid overflow.
  * Has fields <is_available>, <fast_t>, and <least_t>.
  * The types are valid only when <is_available> is true.
  */
 template <typename T>
-class larger_type;
+struct larger_type;
 
 
 /*
@@ -242,17 +245,13 @@ extern inline S to_signed(U n)
 
 
 /*
- * Provides a convenient way of obtaining a larger type when using
- * templates, which can be used to store intermediate calculations
- * and avoid overflow.
- *
  * This does not create a compile error if no larger types are
  * available, allowing the programmer to implement a fallback
  * solution. But note that even in this case, the types will be
  * void and thus unusable.
  */
 template <typename T>
-class larger_type {
+struct larger_type {
 private:
 	/* helpers to improve readability. also offers convenient way
 	 * to tweak behavior. */
