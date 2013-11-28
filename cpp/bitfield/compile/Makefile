@@ -14,8 +14,7 @@ d_ntm     = tmp
 ###
 # Include directories (-I), library directories (-L),
 # library names (-l), specific standalones (../libhello.a).
-d_I       = . \
-            /usr/include/x86_64-linux-gnu/c++/4.8
+d_I       = . #/usr/include/x86_64-linux-gnu/c++/4.8
 d_L       =
 f_l       =
 f_lx      =
@@ -26,7 +25,7 @@ f_lx      =
 # For readability, <c/cxx/cppflags> show up before <dbg> ones.
 cc        = gcc
 cxx       = g++
-cppflags  = -pthread#-Wl,--no-as-needed
+cppflags  = #-pthread -Wl,--no-as-needed
 cflags    = -std=c11
 cxxflags  = -std=c++11
 

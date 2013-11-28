@@ -1,12 +1,13 @@
 /*
  * Utilities for detecting and avoiding overflows.
+ * Nov 20 2013
  */
 #ifndef OVERFLOWS_H
 #define OVERFLOWS_H
 
+#include <cstdint>
 #include <limits>
 #include <type_traits>
-#include <cstdint>
 
 #pragma GCC diagnostic push
 /*

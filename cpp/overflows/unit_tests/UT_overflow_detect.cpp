@@ -35,7 +35,7 @@ public:
 	}
 };
 
-typedef ::testing::Types<signed char, unsigned char> TestTypes;
+typedef ::testing::Types<int8_t, uint8_t, int16_t, uint16_t> TestTypes;
 TYPED_TEST_CASE(UT_overflow_detect, TestTypes);
 
 TYPED_TEST(UT_overflow_detect, Addition)
