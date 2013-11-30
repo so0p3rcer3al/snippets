@@ -1,5 +1,5 @@
 	.file	"hello.cpp"
-# GNU C++ (Ubuntu/Linaro 4.8.1-10ubuntu8) version 4.8.1 (x86_64-linux-gnu)
+# GNU C++ (Ubuntu/Linaro 4.8.1-10ubuntu9) version 4.8.1 (x86_64-linux-gnu)
 #	compiled by GNU C version 4.8.1, GMP version 5.1.2, MPFR version 3.1.1-p2, MPC version 1.0.1
 # GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
 # options passed:  -I /usr/include/x86_64-linux-gnu/c++/4.8
@@ -51,69 +51,70 @@
 	.globl	_Z15get_field0_compv
 	.type	_Z15get_field0_compv, @function
 _Z15get_field0_compv:
-.LFB1615:
+.LFB1445:
 	.cfi_startproc
-	movzbl	bf(%rip), %eax	# bf.store, D.34563
-	andl	$127, %eax	#, D.34563
+	movzbl	bf_R(%rip), %eax	# bf_R, D.32333
+	andl	$127, %eax	#, D.32333
 	ret
 	.cfi_endproc
-.LFE1615:
+.LFE1445:
 	.size	_Z15get_field0_compv, .-_Z15get_field0_compv
 	.p2align 4,,15
 	.globl	_Z15get_field0_origv
 	.type	_Z15get_field0_origv, @function
 _Z15get_field0_origv:
-.LFB1616:
+.LFB1446:
 	.cfi_startproc
-	movzbl	bf(%rip), %eax	# bf.store, D.34567
-	andl	$127, %eax	#, D.34567
+	movzbl	bf(%rip), %eax	# bf.store, D.32337
+	andl	$127, %eax	#, D.32337
 	ret
 	.cfi_endproc
-.LFE1616:
+.LFE1446:
 	.size	_Z15get_field0_origv, .-_Z15get_field0_origv
 	.p2align 4,,15
 	.globl	_Z15get_field1_compv
 	.type	_Z15get_field1_compv, @function
 _Z15get_field1_compv:
-.LFB1617:
+.LFB1447:
 	.cfi_startproc
-	movzbl	bf(%rip), %eax	# bf.store, D.34570
-	shrb	$7, %al	#, D.34570
+	movzbl	bf_R(%rip), %eax	# bf_R, D.32340
+	shrb	$7, %al	#, D.32340
 	ret
 	.cfi_endproc
-.LFE1617:
+.LFE1447:
 	.size	_Z15get_field1_compv, .-_Z15get_field1_compv
 	.p2align 4,,15
 	.globl	_Z15get_field1_origv
 	.type	_Z15get_field1_origv, @function
 _Z15get_field1_origv:
-.LFB1618:
+.LFB1448:
 	.cfi_startproc
-	movzbl	bf(%rip), %eax	# bf.store, D.34574
-	shrb	$7, %al	#, D.34574
+	movzbl	bf(%rip), %eax	# bf.store, D.32344
+	shrb	$7, %al	#, D.32344
 	ret
 	.cfi_endproc
-.LFE1618:
+.LFE1448:
 	.size	_Z15get_field1_origv, .-_Z15get_field1_origv
 	.p2align 4,,15
 	.globl	_Z15set_field0_comph
 	.type	_Z15set_field0_comph, @function
 _Z15set_field0_comph:
-.LFB1619:
+.LFB1449:
 	.cfi_startproc
-	movzbl	bf(%rip), %eax	# bf.store, tmp69
-	andl	$-128, %eax	#, tmp69
-	orl	%edi, %eax	# n, tmp69
-	movb	%al, bf(%rip)	# tmp69, bf.store
+	movzbl	bf_R(%rip), %eax	# bf_R.a, tmp66
+	andl	$127, %edi	#, tmp63
+	andl	$-128, %eax	#, tmp66
+	orl	%edi, %eax	# tmp63, tmp66
+	movb	%al, bf_R(%rip)	# tmp66, bf_R.a
 	ret
 	.cfi_endproc
-.LFE1619:
+.LFE1449:
 	.size	_Z15set_field0_comph, .-_Z15set_field0_comph
 	.p2align 4,,15
 	.globl	_Z15set_field0_origh
 	.type	_Z15set_field0_origh, @function
 _Z15set_field0_origh:
-.LFB1620:
+.LFB1450:
 	.cfi_startproc
 	movzbl	bf(%rip), %eax	# bf.store, tmp66
 	andl	$-128, %eax	#, tmp66
@@ -121,46 +122,43 @@ _Z15set_field0_origh:
 	movb	%al, bf(%rip)	# tmp66, bf.store
 	ret
 	.cfi_endproc
-.LFE1620:
+.LFE1450:
 	.size	_Z15set_field0_origh, .-_Z15set_field0_origh
 	.p2align 4,,15
 	.globl	_Z15set_field1_comph
 	.type	_Z15set_field1_comph, @function
 _Z15set_field1_comph:
-.LFB1621:
+.LFB1451:
 	.cfi_startproc
-	movzbl	bf(%rip), %eax	# bf.store, D.34586
-	sall	$7, %edi	#, tmp73
-	andl	$127, %eax	#, D.34586
-	orl	%eax, %edi	# D.34586, tmp73
-	movb	%dil, bf(%rip)	# tmp73, bf.store
+	movzbl	bf_R(%rip), %eax	# bf_R.b, tmp66
+	sall	$7, %edi	#, tmp63
+	andl	$127, %eax	#, tmp66
+	orl	%edi, %eax	# tmp63, tmp66
+	movb	%al, bf_R(%rip)	# tmp66, bf_R.b
 	ret
 	.cfi_endproc
-.LFE1621:
+.LFE1451:
 	.size	_Z15set_field1_comph, .-_Z15set_field1_comph
 	.p2align 4,,15
 	.globl	_Z15set_field1_origh
 	.type	_Z15set_field1_origh, @function
 _Z15set_field1_origh:
-.LFB1622:
+.LFB1452:
 	.cfi_startproc
-	testb	%dil, %dil	# n
-	je	.L12	#,
-	orb	$-128, bf(%rip)	#, bf.store
-	ret
-	.p2align 4,,10
-	.p2align 3
-.L12:
-	andb	$127, bf(%rip)	#, bf.store
+	movzbl	bf(%rip), %eax	# bf.store, D.32359
+	sall	$7, %edi	#, tmp68
+	andl	$127, %eax	#, D.32359
+	orl	%eax, %edi	# D.32359, tmp68
+	movb	%dil, bf(%rip)	# tmp68, bf.store
 	ret
 	.cfi_endproc
-.LFE1622:
+.LFE1452:
 	.size	_Z15set_field1_origh, .-_Z15set_field1_origh
 	.section	.text.startup,"ax",@progbits
 	.p2align 4,,15
 	.type	_GLOBAL__sub_I_bf, @function
 _GLOBAL__sub_I_bf:
-.LFB1776:
+.LFB1604:
 	.cfi_startproc
 	subq	$8, %rsp	#,
 	.cfi_def_cfa_offset 16
@@ -173,11 +171,13 @@ _GLOBAL__sub_I_bf:
 	.cfi_def_cfa_offset 8
 	jmp	__cxa_atexit	#
 	.cfi_endproc
-.LFE1776:
+.LFE1604:
 	.size	_GLOBAL__sub_I_bf, .-_GLOBAL__sub_I_bf
 	.section	.init_array,"aw"
 	.align 8
 	.quad	_GLOBAL__sub_I_bf
+	.local	bf_R
+	.comm	bf_R,1,1
 	.globl	bf
 	.bss
 	.type	bf, @object
@@ -187,5 +187,5 @@ bf:
 	.local	_ZStL8__ioinit
 	.comm	_ZStL8__ioinit,1,1
 	.hidden	__dso_handle
-	.ident	"GCC: (Ubuntu/Linaro 4.8.1-10ubuntu8) 4.8.1"
+	.ident	"GCC: (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1"
 	.section	.note.GNU-stack,"",@progbits

@@ -6,7 +6,7 @@
 _Z15get_field0_compv:                   # @_Z15get_field0_compv
 	.cfi_startproc
 # BB#0:
-	movzbl	bf(%rip), %eax
+	movzbl	bf_R.0(%rip), %eax
 	andl	$127, %eax
 	ret
 .Ltmp0:
@@ -32,7 +32,7 @@ _Z15get_field0_origv:                   # @_Z15get_field0_origv
 _Z15get_field1_compv:                   # @_Z15get_field1_compv
 	.cfi_startproc
 # BB#0:
-	movb	bf(%rip), %al
+	movb	bf_R.0(%rip), %al
 	shrb	$7, %al
 	movzbl	%al, %eax
 	ret
@@ -60,10 +60,11 @@ _Z15get_field1_origv:                   # @_Z15get_field1_origv
 _Z15set_field0_comph:                   # @_Z15set_field0_comph
 	.cfi_startproc
 # BB#0:
-	movb	bf(%rip), %al
+	movb	bf_R.0(%rip), %al
 	andb	$-128, %al
-	orb	%dil, %al
-	movb	%al, bf(%rip)
+	andb	$127, %dil
+	orb	%al, %dil
+	movb	%dil, bf_R.0(%rip)
 	ret
 .Ltmp4:
 	.size	_Z15set_field0_comph, .Ltmp4-_Z15set_field0_comph
@@ -90,11 +91,11 @@ _Z15set_field0_origh:                   # @_Z15set_field0_origh
 _Z15set_field1_comph:                   # @_Z15set_field1_comph
 	.cfi_startproc
 # BB#0:
-	movb	bf(%rip), %al
+	movb	bf_R.0(%rip), %al
 	andb	$127, %al
 	shlb	$7, %dil
 	orb	%al, %dil
-	movb	%dil, bf(%rip)
+	movb	%dil, bf_R.0(%rip)
 	ret
 .Ltmp6:
 	.size	_Z15set_field1_comph, .Ltmp6-_Z15set_field1_comph
@@ -107,15 +108,10 @@ _Z15set_field1_origh:                   # @_Z15set_field1_origh
 	.cfi_startproc
 # BB#0:
 	movb	bf(%rip), %al
-	testb	%dil, %dil
-	je	.LBB7_1
-# BB#2:
-	orb	$-128, %al
-	movb	%al, bf(%rip)
-	ret
-.LBB7_1:
 	andb	$127, %al
-	movb	%al, bf(%rip)
+	shlb	$7, %dil
+	orb	%al, %dil
+	movb	%dil, bf(%rip)
 	ret
 .Ltmp7:
 	.size	_Z15set_field1_origh, .Ltmp7-_Z15set_field1_origh
@@ -151,6 +147,9 @@ bf:
 	.zero	1
 	.size	bf, 1
 
+	.type	bf_R.0,@object          # @bf_R.0
+	.local	bf_R.0
+	.comm	bf_R.0,1,1
 	.section	.init_array,"aw",@init_array
 	.align	8
 	.quad	_GLOBAL__I_a
