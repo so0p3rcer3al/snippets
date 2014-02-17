@@ -51,13 +51,6 @@ private:
 	/*
 	 * For a sequence [a,b,c,..], calculates the sum of the
 	 * subsequence from [0,i).
-	 * Don't static_assert(i <= 1 + sizeof...(bcd), "") here
-	 * because templates always get expanded fully before
-	 * being evaluated. At some level of the recursion, when
-	 * i == 0, even though we'll never take the other branch,
-	 * the compiler still checks it. And of course -1 on an
-	 * unsigned type causes it to wrap around and become
-	 * large again, failing our assertion.
 	 */
 	template <size_t i, size_t a, size_t... bcd>
 	struct sum_up_to {
@@ -66,12 +59,13 @@ private:
 	};
 	template <size_t i, size_t a>
 	struct sum_up_to<i, a> {
-		static constexpr size_t value = i > 0 ? a : 0;
+		static constexpr size_t value = i > 0 ?
+			a : 0;
 	};
 
 	/*
 	 * For a sequence A = [a,b,c,..], gets the value of A[i].
-	 * Don't do static_assert's here either.
+	 * (Or the last element, if i is out of range.)
 	 */
 	template <size_t i, size_t a, size_t... bcd>
 	struct value_at {
@@ -88,7 +82,6 @@ private:
 	static constexpr size_t total_width = sum_up_to<field_count, widths...>::value;
 	static_assert(::std::is_unsigned<U>::value, "U must be unsigned");
 	static_assert(total_width <= nl::digits, "U is not large enough");
-	/* The whole point of a bitfield is to conserve space! */
 	static_assert(total_width == nl::digits, "(WARN) not all bits are used");
 
 	/*
@@ -105,7 +98,6 @@ private:
 private:
 	U store = 0;
 public:
-	/* Can also define implcit conversion operators here. */
 
 	U GetStore()
 	{
